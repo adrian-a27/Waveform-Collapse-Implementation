@@ -15,8 +15,27 @@ class WFC:
 
     def __init__(self, wavefunction: Wavefunction):
         """Initialize the WFC class with its wavefunction."""
-        self.wavefunction = wavefunction
+        self.wavefunction: Wavefunction = wavefunction
 
-    def iterate(self) -> None:
+    def iterate(self) -> bool:
         """Perform the next interation in the Wavefunction Collapse Algorithm."""
-        pass
+        selected_tile = self.wavefunction.get_min_entropy_tile()
+        selected_tile.collapase()
+        return self.wavefunction.propegate(selected_tile)
+
+    def collapse_wavefunction(self) -> bool:
+        """
+        Collapses the wavefunction.
+
+        Returns:
+            True if the wavefunction successfully collapses. False otherwise.
+        """
+        was_successful: bool = True
+
+        while not self.wavefunction.is_collapsed():
+            was_successful = self.iterate()
+
+            if not was_successful:
+                break
+
+        return was_successful
