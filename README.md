@@ -1,2 +1,2 @@
-# Waveform-Collapse-Implementation
-WaveformCollapse
+# Wavefunction-Collapse-Implementation
+WavefunctionCollapse
