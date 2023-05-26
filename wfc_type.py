@@ -1,2 +1,0 @@
-class WFCType():
-    pass
