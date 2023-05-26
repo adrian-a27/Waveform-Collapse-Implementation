@@ -1,6 +1,6 @@
 """This module contains the WFCTile class and Wavefunction Interface."""
 
-from typing import TypeVar, Generic, Set, List
+from typing import TypeVar, Generic, Set, List, Any
 from abc import ABC, abstractmethod
 
 T = TypeVar("T")
@@ -29,6 +29,10 @@ class WFCTile(ABC, Generic[T]):
     def neighbors(self) -> Set[T]:
         """A set of all possible neighbors, initialized to contain every option."""
 
+    @abstractmethod
+    def collapase(self) -> bool:
+        """Collapses the tile to an option."""
+
 
 class Wavefunction(ABC):
     """
@@ -44,11 +48,11 @@ class Wavefunction(ABC):
 
     @property
     @abstractmethod
-    def wavefunction(self) -> List[List[WFCTile]]:
+    def wavefunction(self) -> List[List[WFCTile[Any]]]:
         """The current state of the wavefunction."""
 
     @abstractmethod
-    def propegate(self, selected_tile) -> bool:
+    def propegate(self, selected_tile: WFCTile[Any]) -> bool:
         """
         Propegates a given change throughout the entire board.
 
@@ -60,7 +64,7 @@ class Wavefunction(ABC):
         """
 
     @abstractmethod
-    def get_min_entropy_tile(self) -> WFCTile:
+    def get_min_entropy_tile(self) -> WFCTile[Any]:
         """
         Determine the next tile to collapse.
 
@@ -78,4 +82,13 @@ class Wavefunction(ABC):
 
         Returns:
             A string representation of the final waveform
+        """
+
+    @abstractmethod
+    def is_collapsed(self) -> bool:
+        """
+        Check if the wavefunction is collapsed.
+        
+        Returns:
+            True if the wavefunction is completely collapsed. False otherwise.
         """
