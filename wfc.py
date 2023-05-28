@@ -1,5 +1,5 @@
 """This module contains the Wavefunction Collapse (WFC) algorithm class."""
-
+from typing import List
 from wfc_types import Wavefunction
 
 
@@ -16,26 +16,31 @@ class WFC:
     def __init__(self, wavefunction: Wavefunction):
         """Initialize the WFC class with its wavefunction."""
         self.wavefunction: Wavefunction = wavefunction
+        self.previous_wavefunctions: List[Wavefunction] = []
 
-    def iterate(self) -> bool:
-        """Perform the next interation in the Wavefunction Collapse Algorithm."""
+    def __iterate(self) -> (Wavefunction | None):
+        """Perform the next interation in the Wavefunction Collapse algorithm."""
         selected_tile = self.wavefunction.get_min_entropy_tile()
-        selected_tile.collapase()
-        return self.wavefunction.propegate(selected_tile)
+        new_tile = selected_tile.collapase()        
+        return self.wavefunction.propegate(new_tile) if new_tile else None
 
-    def collapse_wavefunction(self) -> bool:
+    def collapse_wavefunction(self) -> (Wavefunction | None):
         """
         Collapses the wavefunction.
 
         Returns:
             True if the wavefunction successfully collapses. False otherwise.
         """
-        was_successful: bool = True
+        was_successful: (Wavefunction | None) = None
 
         while not self.wavefunction.is_collapsed():
-            was_successful = self.iterate()
+            original_wavefunction = self.wavefunction
+            new_wavefunction = self.__iterate()
 
-            if not was_successful:
-                break
+            if new_wavefunction:
+                self.previous_wavefunctions.append(original_wavefunction)
+                self.wavefunction = new_wavefunction
+            else:
+                self.wavefunction = self.previous_wavefunctions.pop()
 
         return was_successful

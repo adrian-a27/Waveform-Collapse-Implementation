@@ -1,4 +1,4 @@
-"""This module contains the WFCTile class and Wavefunction Interface."""
+"""This module contains the immutable WFCTile class and Wavefunction Interface."""
 
 from typing import TypeVar, Generic, Set, List, Any
 from abc import ABC, abstractmethod
@@ -8,7 +8,7 @@ T = TypeVar("T")
 
 class WFCTile(ABC, Generic[T]):
     """
-    A tile in the WFC algorithm.
+    An immutable tile in the WFC algorithm.
 
     Args:
         value (T): The given value for this tile. Default is None.
@@ -30,13 +30,18 @@ class WFCTile(ABC, Generic[T]):
         """A set of all possible neighbors, initialized to contain every option."""
 
     @abstractmethod
-    def collapase(self) -> bool:
-        """Collapses the tile to an option."""
+    def collapase(self) -> ("WFCTile[T]" | None):
+        """
+        Collapses the tile to an option.
+
+        Returns:
+            A new WFCTile if there are still valid options. None otherwise.
+        """
 
 
 class Wavefunction(ABC):
     """
-    An interface defining the wavefunction structure in the WFC algorthim.
+    An interface defining an immutable wavefunction structure in the WFC algorthim.
 
     Args:
         options (Set[T]): A set of all possible options for each tile of the wavefunction
@@ -52,7 +57,7 @@ class Wavefunction(ABC):
         """The current state of the wavefunction."""
 
     @abstractmethod
-    def propegate(self, selected_tile: WFCTile[Any]) -> bool:
+    def propegate(self, selected_tile: WFCTile[Any]) -> ("Wavefunction" | None):
         """
         Propegates a given change throughout the entire board.
 
@@ -60,7 +65,7 @@ class Wavefunction(ABC):
             selected_tile (WFCTile): The selected tile to collapse the waveform under.
 
         Returns:
-            False iff there is an entry with no valid options. True otherwise.
+            The updated wavefunction if all tiles still have valid options. None otherwise.
         """
 
     @abstractmethod
