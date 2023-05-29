@@ -15,12 +15,12 @@ class WFCTile(ABC, Generic[T]):
 
     Attributes:
         value (T | None): The value represented by this tile.
-        possible_values (Set[T]): All possible values for this tile.        
+        possible_values (Set[T]): All possible values for this tile.
         neighbors (Set[T]): A set of all possible neighbors, initialized to contain every
         option.
     """
 
-    def __init__(self, value: (T | None) = None):
+    def __init__(self, value: (T | None) = None) -> None:
         """
         Initialize a WFCTile.
 
