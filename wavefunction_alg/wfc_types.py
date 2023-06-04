@@ -1,10 +1,10 @@
 """This module contains the immutable WFCTile class and Wavefunction Interface."""
 
-from typing import Self, TypeVar, Generic, Set, List, Any
+from typing import Self, TypeVar, Generic, Set, List
 from abc import ABC, abstractmethod
 
 T = TypeVar("T")
-
+E = TypeVar("E")
 
 class WFCTile(ABC, Generic[T]):
     """
@@ -34,20 +34,16 @@ class WFCTile(ABC, Generic[T]):
     @abstractmethod
     def collapase(self) -> Self | None:
         """
-        Collapses the tile to an option.
+        Collapses the space to a single randomly-selected valid value.
 
         Returns:
             A new WFCTile if there are still valid options. None otherwise.
         """
 
 
-class Wavefunction(ABC):
+class Wavefunction(ABC, Generic[E]):
     """
     An interface defining an immutable wavefunction structure in the WFC algorthim.
-
-    Args:
-        options (Set[T]): A set of all possible options for each tile of the wavefunction
-        size (int, int): a tuple containing width and height information
 
     Attributes:
         wavefunction (List[List[WFCTile]]): The state of the wavefunction
@@ -55,40 +51,37 @@ class Wavefunction(ABC):
 
     @property
     @abstractmethod
-    def wavefunction(self) -> List[List[WFCTile[Any]]]:
+    def wavefunction(self) -> List[List[E]]:
         """The current state of the wavefunction."""
 
     @abstractmethod
-    def propegate(self, selected_tile: WFCTile[Any]) -> Self | None:
+    def propegate(self, selected_tile: E) -> Self | None:
         """
         Propegates a given change throughout the entire board.
 
         Arg:
-            selected_tile (WFCTile): The selected tile to collapse the waveform under.
+            selected_tile (WFCTile): The selected tile to collapse the wavefunction under.
 
         Returns:
             The updated wavefunction if all tiles still have valid options. None otherwise.
         """
 
     @abstractmethod
-    def get_min_entropy_tile(self) -> WFCTile[Any]:
+    def get_min_entropy_tile(self) -> E | None:
         """
-        Determine the next tile to collapse.
+        Determine the tile with the fewest options (> 1). Selects randomly if there are multiple.
 
         Returns:
-            The tile in the wavefunction with the lowest number of options.
+            The tile in the wavefunction with the lowest number of options. None if there are none.
         """
 
     @abstractmethod
-    def visualize(self) -> str:
+    def __str__(self) -> str:
         """
-        Visualizes the final result of the wavefunction.
-
-        Raises:
-            Exception: Waveform is not fully collapsed
+        Visualizes the current state of the wavefunction.
 
         Returns:
-            A string representation of the final waveform
+            A string representation of the wavefunction
         """
 
     @abstractmethod
