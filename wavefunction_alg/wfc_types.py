@@ -6,6 +6,7 @@ from abc import ABC, abstractmethod
 T = TypeVar("T")
 E = TypeVar("E")
 
+
 class WFCTile(ABC, Generic[T]):
     """
     An immutable tile in the WFC algorithm.
