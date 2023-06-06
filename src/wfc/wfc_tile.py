@@ -1,6 +1,7 @@
 """This module contains the immutable WFCTile interface."""
 
-from typing import Self, TypeVar, Generic, Set
+from __future__ import annotations
+from typing import TypeVar, Generic, Set
 from abc import ABC, abstractmethod
 
 T = TypeVar("T")
@@ -36,7 +37,7 @@ class WFCTile(ABC, Generic[T]):
         self.neighbors: Set[T] = set()
 
     @abstractmethod
-    def collapase(self) -> Self | None:
+    def collapase(self) -> WFCTile[T] | None:
         """
         Collapses the space to a single randomly-selected valid value.
 

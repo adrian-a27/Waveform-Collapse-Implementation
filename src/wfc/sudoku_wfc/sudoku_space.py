@@ -1,6 +1,7 @@
 """This module implements a space in a sodoku board used in the WFC algorithm."""
+
+from __future__ import annotations
 import random
-from typing import Self
 from ..wfc_tile import WFCTile
 
 
@@ -67,7 +68,7 @@ class SudokuSpace(WFCTile[int]):
                 f"Value is {new_value}, but must be between 1 and {self.max_value} inclusive."
             )
 
-    def collapase(self) -> Self | None:
+    def collapase(self) -> SudokuSpace | None:
         """
         Collapses the space to a single randomly-selected valid value.
 
@@ -89,7 +90,7 @@ class SudokuSpace(WFCTile[int]):
         )
         return updated_space
 
-    def copy(self) -> Self:
+    def copy(self) -> SudokuSpace:
         """
         Create a copy of the space.
 

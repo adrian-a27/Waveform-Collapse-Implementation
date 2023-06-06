@@ -1,11 +1,12 @@
 """This module contains the Wavefunction Collapse (WFC) algorithm class."""
 
-from typing import List, Any
+from typing import TypeVar, Generic, List, Any
 from .wavefunction import Wavefunction
-from .wfc_tile import WFCTile
+
+T = TypeVar("T", bound=Wavefunction[Any])
 
 
-class WFC:
+class WFC(Generic[T]):
     """A class containg all operations for the WFC algorithm.
 
     Args:
@@ -15,27 +16,26 @@ class WFC:
         wavefunction (Wavefunction[WFCTile[Any]]): The active wavefunction.
     """
 
-    def __init__(self, wavefunction: Wavefunction[WFCTile[Any]]) -> None:
+    def __init__(self, wavefunction: T) -> None:
         """Initialize the WFC class with its wavefunction."""
-        self.wavefunction: Wavefunction[WFCTile[Any]] = wavefunction
-        self.previous_wavefunctions: List[Wavefunction[WFCTile[Any]]] = []
+        self.wavefunction: T = wavefunction
+        self.previous_wavefunctions: List[T] = []
 
-    def __iterate(self) -> Wavefunction[WFCTile[Any]] | None:
-        """Perform the next interation in the Wavefunction[WFCTile[Any]] Collapse algorithm."""
+    def __iterate(self) -> T | None:
+        """Perform the next interation in the Wavefunction Collapse algorithm."""
         selected_tile = self.wavefunction.get_min_entropy_tile()
         if not selected_tile:
             return None
         new_tile = selected_tile.collapase()
         return self.wavefunction.propegate(new_tile) if new_tile else None
 
-    def collapse_wavefunction(self) -> Wavefunction[WFCTile[Any]] | None:
+    def collapse_wavefunction(self) -> bool:
         """
         Collapses the wavefunction.
 
         Returns:
             True if the wavefunction successfully collapses. False otherwise.
         """
-        was_successful: (Wavefunction[WFCTile[Any]] | None) = None
         count = 0
         while not self.wavefunction.is_collapsed():
             count += 1
@@ -48,4 +48,4 @@ class WFC:
             else:
                 self.wavefunction = self.previous_wavefunctions.pop()
         print("\n")
-        return was_successful
+        return True

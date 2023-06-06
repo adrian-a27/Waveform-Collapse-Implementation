@@ -1,9 +1,11 @@
 """This module contains the immutable Wavefunction Interface."""
 
-from typing import Self, TypeVar, Generic, Set, List
+from __future__ import annotations
+from typing import TypeVar, Generic, Set, List, Any
 from abc import ABC, abstractmethod
+from .wfc_tile import WFCTile
 
-E = TypeVar("E")
+E = TypeVar("E", bound=WFCTile[Any])
 
 
 class Wavefunction(ABC, Generic[E]):
@@ -20,7 +22,7 @@ class Wavefunction(ABC, Generic[E]):
         """The current state of the wavefunction."""
 
     @abstractmethod
-    def propegate(self, selected_tile: E) -> Self | None:
+    def propegate(self, selected_tile: E) -> Wavefunction[E] | None:
         """
         Propegates a given change throughout the entire board.
 

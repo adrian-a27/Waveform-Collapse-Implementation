@@ -1,7 +1,8 @@
 """This module implements a sudoku board to be used with the WFC algorithm."""
 
+from __future__ import annotations
 import random
-from typing import List, Dict, Self, Tuple, Set
+from typing import List, Dict, Tuple, Set
 from ..wavefunction import Wavefunction
 from .sudoku_space import SudokuSpace
 
@@ -136,7 +137,7 @@ class SudokuBoard(Wavefunction[SudokuSpace]):
         affected_spaces.remove(board_copy[y][x])
         return affected_spaces
 
-    def propegate(self, selected_tile: SudokuSpace) -> Self | None:
+    def propegate(self, selected_tile: SudokuSpace) -> SudokuBoard | None:
         """
         Propegate a given change throughout the entire board.
 
@@ -195,3 +196,36 @@ class SudokuBoard(Wavefunction[SudokuSpace]):
         output = "\n".join(output.split("\n")[:-2])
         output = output + "\n" + "--------" * self.board_size
         return output[:-1]
+
+
+def is_valid(board: List[List[SudokuSpace]]) -> bool:
+    """
+    Checks if a solved sudoku board is valid.
+
+    Args:
+        board (List[List[SudokuSpace]]): A solved sudoku board
+
+    Returns:
+        True if the solution is valid. False otherwise.
+    """
+    for row in board:
+        if len(set(space.value for space in row)) != len(board):
+            return False
+
+    # Check columns
+    for col in range(len(board)):
+        column = [board[row][col] for row in range(len(board))]
+        if len(set(space.value for space in column)) != len(board):
+            return False
+
+    square_size = int(len(board) ** 0.5)
+    for i in range(0, len(board), square_size):
+        for j in range(0, len(board), square_size):
+            subgrid = [
+                board[row][col]
+                for row in range(i, i + square_size)
+                for col in range(j, j + square_size)
+            ]
+            if len(set(space.value for space in subgrid)) != len(board):
+                return False
+    return True
