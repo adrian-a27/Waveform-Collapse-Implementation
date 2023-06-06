@@ -1,45 +1,9 @@
-"""This module contains the immutable WFCTile class and Wavefunction Interface."""
+"""This module contains the immutable Wavefunction Interface."""
 
 from typing import Self, TypeVar, Generic, Set, List
 from abc import ABC, abstractmethod
 
-T = TypeVar("T")
 E = TypeVar("E")
-
-
-class WFCTile(ABC, Generic[T]):
-    """
-    An immutable tile in the WFC algorithm.
-
-    Args:
-        value (T | None): The given value for this tile. Default is None.
-
-    Attributes:
-        value (T | None): The value represented by this tile.
-        possible_values (Set[T]): All possible values for this tile.
-        neighbors (Set[T]): A set of all possible neighbors, initialized to contain every
-        option.
-    """
-
-    def __init__(self, value: (T | None) = None) -> None:
-        """
-        Initialize a WFCTile.
-
-        Args:
-            value (T | None): The given value for this tile. Default is None.
-        """
-        self.value: (T | None) = value
-        self.possible_values: Set[T] = set()
-        self.neighbors: Set[T] = set()
-
-    @abstractmethod
-    def collapase(self) -> Self | None:
-        """
-        Collapses the space to a single randomly-selected valid value.
-
-        Returns:
-            A new WFCTile if there are still valid options. None otherwise.
-        """
 
 
 class Wavefunction(ABC, Generic[E]):
@@ -74,6 +38,19 @@ class Wavefunction(ABC, Generic[E]):
 
         Returns:
             The tile in the wavefunction with the lowest number of options. None if there are none.
+        """
+
+    @abstractmethod
+    def get_affected_spaces(self, board_copy: List[List[E]], x: int, y: int) -> Set[E]:
+        """
+        Determine all spaces that can be affected by a tile at this coordinate.
+
+        Args:
+            x (int): The x-coordinate of a tile.
+            y (int): The y-coordinate of a tile.
+
+        Returns:
+            A set of tiles that can be affected by the given coordinates.
         """
 
     @abstractmethod
