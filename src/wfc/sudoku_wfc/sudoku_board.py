@@ -5,6 +5,7 @@ from typing import List, Dict, Self, Tuple, Set
 from ..wavefunction import Wavefunction
 from .sudoku_space import SudokuSpace
 
+
 class SudokuBoard(Wavefunction[SudokuSpace]):
     """
     An immutable Sudoku board to be used in the WFC algorthim.

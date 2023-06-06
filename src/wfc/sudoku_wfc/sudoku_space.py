@@ -3,6 +3,7 @@ import random
 from typing import Self
 from ..wfc_tile import WFCTile
 
+
 class SudokuSpace(WFCTile[int]):
     """
     An immutable type that represents a space on a sudoku space.
